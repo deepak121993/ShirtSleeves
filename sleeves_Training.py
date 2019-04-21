@@ -61,8 +61,10 @@ sdl = SimpleDatasetLoader(preprocessor=[sp,iap])
 le = LabelEncoder()
 labels = le.fit_transform(label)
 
-
-data = data.astype("float32")/255.0
+try:
+    data = data.astype("float32")/255.0
+except Exception as e:
+    print("error as ",str(e)) 
 
 datagen = ImageDataGenerator(
     featurewise_center=True,

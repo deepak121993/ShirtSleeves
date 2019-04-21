@@ -57,7 +57,7 @@ iap = ImageToArrayProcessor()
 
 sdl = SimpleDatasetLoader(preprocessor=[sp,iap])
 (data,label) = sdl.load(imagePaths,verbose=500)
-print("labels ",label)
+#print("labels ",label)
 
 le = LabelEncoder()
 labels = le.fit_transform(label)
@@ -112,7 +112,7 @@ testY = to_categorical(testY)
 
 opt = SGD(lr=0.01, momentum=0.9, nesterov=True)
 
-model = MiniVGGNet.build(width=224, height=224, depth=3, classes=2)
+model = MiniVGGNet.build(width=224, height=224, depth=3, classes=4)
 
 # model.fit_generator(datagen.flow(trainX, trainY, batch_size=32),
 #                     steps_per_epoch=len(trainX) / 32, epochs=epochs)

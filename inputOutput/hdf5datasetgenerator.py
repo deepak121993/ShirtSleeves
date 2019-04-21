@@ -24,7 +24,7 @@ class HDF5DataGenerator:
             for i in np.arange(0,self.numImages,self.batchSize):
                 images = self.db["images"][i:i+self.batchSize]
                 labels= self.db["labels"][i:i+self.batchSize]
-
+                print("label ",labels)
                 if self.binarizer:
                     labels = np_utils.to_categorical(labels,self.classes)
                 

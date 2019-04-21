@@ -1,7 +1,7 @@
     
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from io.hdf5datasetwriter import HDF5DatasetWriter
+from inputOutput.hdf5datasetwriter import HDF5DatasetWriter
 from imutils import paths
 import numpy as np
 import progressbar

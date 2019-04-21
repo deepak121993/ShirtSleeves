@@ -42,7 +42,7 @@ for (dtype,paths,labels,outputPath) in datasets:
     for (i,(path,label)) in enumerate(zip(paths,labels)):
         try:
             image = cv2.imread(path)
-            image = cv2.resize(image, (224,224,3), interpolation = cv2.INTER_AREA)
+            image = cv2.resize(image, (224,224), interpolation = cv2.INTER_AREA)
             writer.add([image],[label])
             pbar.update(i)
         except Exception as e:

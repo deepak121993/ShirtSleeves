@@ -3,7 +3,7 @@ import numpy as np
 import h5py
 
 class HDF5DataGenerator:
-    def __init__(self,dbPath,batchSize,preprocessors=None,aug=None,binarizer=True,classes=2):
+    def __init__(self,dbPath,batchSize,preprocessors=None,aug=None,binarizer=True,classes=4):
 
         #whetehr or not the labels are binarizer
         self.batchSize = batchSize

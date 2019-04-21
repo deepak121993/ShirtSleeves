@@ -26,7 +26,7 @@ class HDF5DatasetWriter:
 
         self.buffer["data"].extend(rows)
         self.buffer["labels"].extend(labels)
-        print("length of buffered data " ,len(self.buffer["data"]))
+        #print("length of buffered data " ,len(self.buffer["data"]))
         if len(self.buffer["data"]) > self.bufSize:
             self.flush()
     

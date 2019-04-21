@@ -23,6 +23,7 @@ split = train_test_split(trainPaths,trainLabels,test_size=0.20,stratify=trainLab
         random_state=42)
 (trainPaths,testPaths,trainLabels,testLabels)=split
 
+print("trainPaths ",trainPaths[0])
 # M = open(config.VAL_MAPPING).read().strip().split("\n")
 # M = [r.split("\t")[:2] for r in M]
 
@@ -33,11 +34,16 @@ datasets = [("train",trainPaths,trainLabels,train_hdf5),("test",testPaths,testLa
 
 for (dtype,paths,labels,outputPath) in datasets:
     print("[INFO] building {}..".format(outputPath))
-    writer = HDF5DatasetWriter((len(paths),64,64,3),outputPath)
+    writer = HDF5DatasetWriter((len(paths),224,224,3),outputPath)
 
     widget = ["building dataset",progressbar.Percentage()," ",progressbar.Bar()]
     pbar = progressbar.ProgressBar(maxval=len(paths),widgets=widget).start()
 
+    for (i,(path,label)) in enumerate(zip(paths,labels)):
+        image = cv2.imread(path)
+        
+        writer.add([image],[label])
+        pbar.update(i)
 
     pbar.finish()
     writer.close()

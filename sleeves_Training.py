@@ -72,9 +72,9 @@ iap = ImageToArrayProcessor()
 aug = ImageDataGenerator(rotation_range=20,zoom_range=0.15,width_shift_range=0.2,height_shift_range=0.2,
                         shear_range=0.15,horizontal_flip=True,fill_mode="nearest")
 
-trainGen = HDF5DataGenerator(train_hdf5,128,aug=aug,preprocessors=[sp,iap],classes=2)
+trainGen = HDF5DataGenerator(train_hdf5,128,aug=aug,preprocessors=[sp,iap],classes=4)
 #testGen  = HDF5DataGenerator(config.TEST_HDF5,128,aug=aug,preprocessors=[sp,pp,mp,iap],classes=2)
-valGen   = HDF5DataGenerator(test_hdf5,128,aug=aug,preprocessors=[sp,iap],classes=2)
+valGen   = HDF5DataGenerator(test_hdf5,128,aug=aug,preprocessors=[sp,iap],classes=4)
 
 #(trainX,testX,trainY,testY) = train_test_split(data,labels,test_size=0.25,random_state=40)
 

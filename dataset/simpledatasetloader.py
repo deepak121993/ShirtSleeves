@@ -28,6 +28,7 @@ class SimpleDatasetLoader:
                     try:
                         image = p.preprocess(image)
                     except Exception as e:
+                        continue
                         print("Error with image ",str(e))
             
 

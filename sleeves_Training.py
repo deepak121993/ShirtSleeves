@@ -56,7 +56,7 @@ sp = SimplePreprocessor(224,224)
 iap = ImageToArrayProcessor()
 
 sdl = SimpleDatasetLoader(preprocessor=[sp,iap])
-(data,label) =sdl.load(imagePaths,verbose=500)
+(data,label) = sdl.load(imagePaths,verbose=500)
 
 le = LabelEncoder()
 labels = le.fit_transform(label)

@@ -2,6 +2,7 @@ from preprocessing.meanpreprocessor import MeanPreprocessor
 #from preprocessing.patchpreprocessor import PatchPreporcessor
 from preprocessing.simplepreprocessor import SimplePreprocessor
 #from preprocessing.aspectawarepreprocess import AspectAwarePreprocessor
+from dataset.simpledatasetloader import SimpleDatasetLoader
 from preprocessing.imagetoarraypreprocessor import ImageToArrayProcessor
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import  train_test_split
@@ -47,15 +48,14 @@ img_path="drive/My Drive/data_sleeves"
 print("going to load images")
 imagePaths = np.array(list(paths.list_images(img_path)))
 
-print("image path ",imagePaths)
+print("image path ",len(imagePaths))
 
 
 
 sp = SimplePreprocessor(224,224)
 iap = ImageToArrayProcessor()
 
-#sdl = SimpleDatasetLoader(preprocessor=[sp,iap])
-sdl=""
+sdl = SimpleDatasetLoader(preprocessor=[sp,iap])
 (data,label) =sdl.load(imagePaths,verbose=500)
 
 le = LabelEncoder()
@@ -109,7 +109,7 @@ testY = to_categorical(testY)
 
 opt = SGD(lr=0.01, momentum=0.9, nesterov=True)
 
-#model = MiniVGGNet.build(width=224, height=224, depth=3, classes=2)
+model = MiniVGGNet.build(width=224, height=224, depth=3, classes=2)
 
 # model.fit_generator(datagen.flow(trainX, trainY, batch_size=32),
 #                     steps_per_epoch=len(trainX) / 32, epochs=epochs)
@@ -119,12 +119,12 @@ model.compile(loss="categorical_crossentropy", optimizer=opt,
     metrics=["accuracy"])
 
 
-checkpoint = ModelCheckpoint(args["model"], monitor='val_acc', verbose=1, save_best_only=True,save_weights_only=True)
+#checkpoint = ModelCheckpoint(args["model"], monitor='val_acc', verbose=1, save_best_only=True,save_weights_only=True)
 
 print("[INFO] training the network...")
 print("trainX ",trainX.shape )
 H = model.fit(trainX, trainY, validation_data=(testX, testY), batch_size=10,\
-    epochs=10, verbose=1,callbacks=[checkpoint])
+    epochs=10, verbose=1)
 
 print("[INFO] evaluating network...")
 

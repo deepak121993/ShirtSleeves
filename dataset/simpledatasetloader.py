@@ -19,13 +19,16 @@ class SimpleDatasetLoader:
 
 
         for (i,imagePath) in enumerate(imagePaths):
-            print("image path in sdl ",imagePath)
+            #print("image path in sdl ",imagePath)
             image = cv2.imread(imagePath)
             label = imagePath.split(os.path.sep)[-2]
 
             if self.preprocessor  is not None:
                 for p in self.preprocessor:
-                    image = p.preprocess(image)
+                    try:
+                        image = p.preprocess(image)
+                    except Exception as e:
+                        print("Error with image ",str(e))
             
 
 

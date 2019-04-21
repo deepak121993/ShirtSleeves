@@ -2,7 +2,7 @@ from preprocessing.meanpreprocessor import MeanPreprocessor
 #from preprocessing.patchpreprocessor import PatchPreporcessor
 from preprocessing.simplepreprocessor import SimplePreprocessor
 #from preprocessing.aspectawarepreprocess import AspectAwarePreprocessor
-from preprocessing.imagetoarrayprocessor import ImageToArrayProcessor
+from preprocessing.imagetoarraypreprocessor import ImageToArrayProcessor
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import  train_test_split
 from nn.cnn.vgg import MiniVGGNet

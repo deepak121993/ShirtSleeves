@@ -1,7 +1,7 @@
 from preprocessing.meanpreprocessor import MeanPreprocessor
 #from preprocessing.patchpreprocessor import PatchPreporcessor
 from preprocessing.simplepreprocessor import SimplePreprocessor
-#from preprocessing.aspectawarepreprocess import AspectAwarePreprocessor
+from pyImageSearch.io.hdf5datasetgenerator import HDF5DataGenerator
 from dataset.simpledatasetloader import SimpleDatasetLoader
 from preprocessing.imagetoarraypreprocessor import ImageToArrayProcessor
 from sklearn.preprocessing import LabelEncoder
@@ -43,71 +43,45 @@ ap.add_argument("-m", "--model", required=False,
     help="Path to the model saved")
 args = vars(ap.parse_args())
 
-#classLabels = ["damaged","undamaged"]
-img_path="drive/My Drive/data_sleeves"
-print("going to load images")
-imagePaths = np.array(list(paths.list_images(img_path)))
 
-print("image path ",len(imagePaths))
 
+# img_path="drive/My Drive/data_sleeves"
+# print("going to load images")
+# imagePaths = np.array(list(paths.list_images(img_path)))
+
+train_hdf5 = "hdf5data/train.hdf5"
+test_hdf5 = "hdf5data/test.hdf5"
 
 
 sp = SimplePreprocessor(224,224)
 iap = ImageToArrayProcessor()
 
-sdl = SimpleDatasetLoader(preprocessor=[sp,iap])
-(data,label) = sdl.load(imagePaths,verbose=500)
-#print("labels ",label)
 
-le = LabelEncoder()
-labels = le.fit_transform(label)
+# sdl = SimpleDatasetLoader(preprocessor=[sp,iap])
+# (data,label) = sdl.load(imagePaths,verbose=500)
+# #print("labels ",label)
 
-try:
-    data = data.astype("float32")/255.0
-except Exception as e:
-    print("error as ",str(e)) 
+# le = LabelEncoder()
+# labels = le.fit_transform(label)
 
-datagen = ImageDataGenerator(
-    featurewise_center=True,
-    featurewise_std_normalization=True,
-    rotation_range=20,
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    horizontal_flip=True)
+# try:
+#     data = data.astype("float32")/255.0
+# except Exception as e:
+#     print("error as ",str(e)) 
 
+aug = ImageDataGenerator(rotation_range=20,zoom_range=0.15,width_shift_range=0.2,height_shift_range=0.2,
+                        shear_range=0.15,horizontal_flip=True,fill_mode="nearest")
 
-(trainX,testX,trainY,testY) = train_test_split(data,labels,test_size=0.25,random_state=40)
+trainGen = HDF5DataGenerator(train_hdf5,128,aug=aug,preprocessors=[sp,iap],classes=2)
+#testGen  = HDF5DataGenerator(config.TEST_HDF5,128,aug=aug,preprocessors=[sp,pp,mp,iap],classes=2)
+valGen   = HDF5DataGenerator(test_hdf5,128,aug=aug,preprocessors=[sp,iap],classes=2)
 
-# trainY = lb.fit_transform(trainY)
-# testY = lb.transform(testY)
-
-# train_datagen = ImageDataGenerator(
-#         rescale=1./255,
-#         shear_range=0.2,
-#         zoom_range=0.2,
-#         horizontal_flip=True)
-
-# test_datagen = ImageDataGenerator(rescale=1./255)
-
-# train_generator = train_datagen.flow_from_directory(
-#         'data/train',
-#         target_size=(150, 150),
-#         batch_size=32,
-#         class_mode='binary')
-# validation_generator = test_datagen.flow_from_directory(
-#         'data/validation',
-#         target_size=(150, 150),
-#         batch_size=32,
-#         class_mode='binary')
-# print("INFO loading model")
-
-#callbacks =[LearningRateScheduler(step_decay)]
-
-#datagen.fit(trainX)
+#(trainX,testX,trainY,testY) = train_test_split(data,labels,test_size=0.25,random_state=40)
 
 
-trainY = to_categorical(trainY)
-testY = to_categorical(testY)
+
+#trainY = to_categorical(trainY)
+#testY = to_categorical(testY)
 
 
 opt = SGD(lr=0.01, momentum=0.9, nesterov=True)
@@ -117,22 +91,32 @@ model = MiniVGGNet.build(width=224, height=224, depth=3, classes=4)
 # model.fit_generator(datagen.flow(trainX, trainY, batch_size=32),
 #                     steps_per_epoch=len(trainX) / 32, epochs=epochs)
 
-print("here")
 model.compile(loss="categorical_crossentropy", optimizer=opt,
     metrics=["accuracy"])
 
 
+model.fit_generator(trainGen.generator(),steps_per_epoch= trainGen.numImages//128 ,
+                    validation_data = valGen.generator(),validation_steps=valGen.numImages//128,
+                    verbose=1,epochs=10)
+
+#model.save(config.MODEL_PATH,overwrite=True)
+
+
+
+
+
+
 #checkpoint = ModelCheckpoint(args["model"], monitor='val_acc', verbose=1, save_best_only=True,save_weights_only=True)
 
-print("[INFO] training the network...")
-print("trainX ",trainX.shape )
-H = model.fit(trainX, trainY, validation_data=(testX, testY), batch_size=10,\
-    epochs=10, verbose=1)
+# print("[INFO] training the network...")
+# print("trainX ",trainX.shape )
+# H = model.fit(trainX, trainY, validation_data=(testX, testY), batch_size=10,\
+#     epochs=10, verbose=1)
 
-print("[INFO] evaluating network...")
+# print("[INFO] evaluating network...")
 
 #model.save(args["model"])
-predictions = model.predict(testX, batch_size=10)
+#predictions = model.predict(testX, batch_size=10)
 
 
 

@@ -49,8 +49,8 @@ args = vars(ap.parse_args())
 # print("going to load images")
 # imagePaths = np.array(list(paths.list_images(img_path)))
 
-train_hdf5 = "hdf5data/train.hdf5"
-test_hdf5 = "hdf5data/test.hdf5"
+train_hdf5 = "ShirtSleeves/hdf5data/train.hdf5"
+test_hdf5 = "ShirtSleeves/hdf5data/test.hdf5"
 
 
 sp = SimplePreprocessor(224,224)

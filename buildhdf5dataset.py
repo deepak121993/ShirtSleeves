@@ -11,11 +11,11 @@ import os
 
 
 img_path="drive/My Drive/data_sleeves"
-train_hdf5 = "hdf5data/train.hdf5"
-test_hdf5 = "hdf5data/test.hdf5"
+train_hdf5 = "ShirtSleeves/hdf5data/train.hdf5"
+test_hdf5 = "ShirtSleeves/hdf5data/test.hdf5"
 trainPaths = list(paths.list_images(img_path))
-print("train paths ",trainPaths)
 trainLabels = [p.split(os.path.sep)[-2] for p in trainPaths]
+print("trainlables ", trainLabels[0])
 le = LabelEncoder()
 
 trainLabels = le.fit_transform(trainLabels)

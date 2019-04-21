@@ -19,7 +19,7 @@ class SimpleDatasetLoader:
 
 
         for (i,imagePath) in enumerate(imagePaths):
-
+            print("image path in sdl ",imagePath)
             image = cv2.imread(imagePath)
             label = imagePath.split(os.path.sep)[-2]
 

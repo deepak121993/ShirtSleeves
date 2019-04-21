@@ -11,4 +11,5 @@ class SimplePreprocessor:
     def preprocess(self,image):
 
         #resize the image to a fixed size ::
+        
         return cv2.resize(image,(self.width,self.height),interpolation=self.inter)

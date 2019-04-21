@@ -1,8 +1,7 @@
     
-from config import tiny_imagenet_config as config
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from pyImageSearch.io.hdf5datasetwriter import HDF5DatasetWriter
+from io.hdf5datasetwriter import HDF5DatasetWriter
 from imutils import paths
 import numpy as np
 import progressbar
@@ -15,7 +14,8 @@ img_path="drive/My Drive/data_sleeves"
 train_hdf5 = "hdf5data/train.hdf5"
 test_hdf5 = "hdf5data/test.hdf5"
 trainPaths = list(paths.list_images(img_path))
-trainLabels = [p.split(os.path.sep)[-3] for p in trainPaths]
+print("train paths ",trainPaths)
+trainLabels = [p.split(os.path.sep)[-2] for p in trainPaths]
 le = LabelEncoder()
 
 trainLabels = le.fit_transform(trainLabels)

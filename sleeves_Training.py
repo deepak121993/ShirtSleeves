@@ -57,6 +57,7 @@ iap = ImageToArrayProcessor()
 
 sdl = SimpleDatasetLoader(preprocessor=[sp,iap])
 (data,label) = sdl.load(imagePaths,verbose=500)
+print("labels ",label)
 
 le = LabelEncoder()
 labels = le.fit_transform(label)

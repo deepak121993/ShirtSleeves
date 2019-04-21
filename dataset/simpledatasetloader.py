@@ -22,20 +22,21 @@ class SimpleDatasetLoader:
             #print("image path in sdl ",imagePath)
             image = cv2.imread(imagePath)
             label = imagePath.split(os.path.sep)[-2]
-
-            if self.preprocessor  is not None:
-                for p in self.preprocessor:
-                    try:
+            try:
+                if self.preprocessor  is not None:
+                    for p in self.preprocessor:
                         image = p.preprocess(image)
-                    except Exception as e:
-                        continue
+                        
+                data.append(image)
+                labels.append(label)
             
+            except:
+                print("error with image")
+                continue
 
-
-            data.append(image)
-            labels.append(label)
 
             if verbose>0 and i>0 and (i+1) % verbose==0:
                 print("INFO processed {}",format(i+1))
 
+        print("labels ",labels)
         return (np.array(data),np.array(labels))

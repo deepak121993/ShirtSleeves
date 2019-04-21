@@ -42,6 +42,7 @@ for (dtype,paths,labels,outputPath) in datasets:
         for (i,(path,label)) in enumerate(zip(paths,labels)):
         
             image = cv2.imread(path)
+            print("image shape ",image.shape, " path ",path)
             writer.add([image],[label])
             pbar.update(i)
 

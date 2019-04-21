@@ -13,7 +13,7 @@ class HDF5DatasetWriter:
         #opn the HDF5 dataset and create 2 two datasets
         #one for image features nd other for labels
 
-        
+
         self.db = h5py.File(outputPath,"w")
         self.data = self.db.create_dataset(dataKey,dims,dtype="float")
         self.labels = self.db.create_dataset("labels",(dims[0],),dtype='int')
@@ -26,7 +26,7 @@ class HDF5DatasetWriter:
 
         self.buffer["data"].extend(rows)
         self.buffer["labels"].extend(labels)
-
+        print("length of buffered data " ,self.buffer["data"].shape)
         if len(self.buffer["data"]) > self.bufSize:
             self.flush()
     

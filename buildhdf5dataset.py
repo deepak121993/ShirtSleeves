@@ -38,16 +38,15 @@ for (dtype,paths,labels,outputPath) in datasets:
 
     widget = ["building dataset",progressbar.Percentage()," ",progressbar.Bar()]
     pbar = progressbar.ProgressBar(maxval=len(paths),widgets=widget).start()
-    try:
+   
         for (i,(path,label)) in enumerate(zip(paths,labels)):
-        
-            image = cv2.imread(path)
-            print("image shape ",image.shape, " path ",path)
-            writer.add([image],[label])
-            pbar.update(i)
-
-    except Exception as e:
-        print("error in Image",str(e))
+            try:
+                image = cv2.imread(path)
+                image = cv2.resize(image, (224,224,3), interpolation = cv2.INTER_AREA)
+                writer.add([image],[label])
+                pbar.update(i)
+            except Exception as e:
+                print("error in Image",str(e))
 
     pbar.finish()
     writer.close()

@@ -31,11 +31,6 @@ from flask import Flask
 matplotlib.use("Agg")
 
 
-
-aug = ImageDataGenerator(rotation_range=20,zoom_range=0.15,width_shift_range=0.2,height_shift_range=0.2,
-                        shear_range=0.15,horizontal_flip=True,fill_mode="nearest")
-
-
 ap = argparse.ArgumentParser()
 ap.add_argument("-o", "--output", required=False,
     help="Path to the output loss/accuracy plot")
@@ -53,7 +48,7 @@ train_hdf5 = "ShirtSleeves/hdf5data/train.hdf5"
 test_hdf5 = "ShirtSleeves/hdf5data/test.hdf5"
 
 
-sp = SimplePreprocessor(64,64)
+sp = SimplePreprocessor(128,128)
 iap = ImageToArrayProcessor()
 
 
@@ -85,9 +80,9 @@ valGen   = HDF5DataGenerator(test_hdf5,28,aug=aug,preprocessors=[sp,iap],classes
 import os
 fname=os.path.sep.join(["ShirtSleeves/model/","weight-{epoch:03d}-{val_loss:.4f}.hdf5"])
 callbacks=[ModelCheckpoint(fname,monitor="val_loss",mode="min",save_best_only=True)]
-opt = SGD(lr=0.01, momentum=0.9, nesterov=True)
+opt = SGD(lr=5e-3, momentum=0.9, nesterov=True)
 
-model = MiniVGGNet.build(width=64, height=64, depth=3, classes=4)
+model = MiniVGGNet.build(width=128, height=128, depth=3, classes=4)
 
 # model.fit_generator(datagen.flow(trainX, trainY, batch_size=32),
 #                     steps_per_epoch=len(trainX) / 32, epochs=epochs)
@@ -98,7 +93,7 @@ model.compile(loss="categorical_crossentropy", optimizer=opt,
 
 model.fit_generator(trainGen.generator(),steps_per_epoch= trainGen.numImages//28 ,
                     validation_data = valGen.generator(),validation_steps=valGen.numImages//28,
-                    verbose=1,epochs=10,callbacks=callbacks)
+                    verbose=1,epochs=70,callbacks=callbacks)
 
 #model.save(config.MODEL_PATH,overwrite=True)
 

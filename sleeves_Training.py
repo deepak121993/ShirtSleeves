@@ -7,6 +7,7 @@ from preprocessing.imagetoarraypreprocessor import ImageToArrayProcessor
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import  train_test_split
 from nn.cnn.vgg import MiniVGGNet
+from nn.cnn.resnet import ResNet
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.metrics import classification_report
 from keras.optimizers import SGD,Adam
@@ -88,11 +89,14 @@ valGen   = HDF5DataGenerator(test_hdf5,28,aug=aug,preprocessors=[sp,iap],classes
 #testY = to_categorical(testY)
 import os
 fname=os.path.sep.join(["ShirtSleeves/model/","weight-{epoch:03d}-{val_loss:.4f}.hdf5"])
-callbacks=[ModelCheckpoint(fname,monitor="val_loss",mode="min",save_best_only=True),LearningRateScheduler(step_decay)]
-opt = Adam(lr=0.01,beta_1=0.9, beta_2=0.999, epsilon=None)
+callbacks=[ModelCheckpoint(fname,monitor="val_loss",mode="min",save_best_only=True)]
+##,LearningRateScheduler(step_decay)
 
-model = MiniVGGNet.build(width=128, height=128, depth=3, classes=4)
+#opt = Adam(lr=0.01,beta_1=0.9, beta_2=0.999, epsilon=None)
+opt = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+#model = MiniVGGNet.build(width=128, height=128, depth=3, classes=4)
 
+model = ResNet.build(128,128,3,4,(9,9,9),(64,64,128,256),reg=0.0005)
 # model.fit_generator(datagen.flow(trainX, trainY, batch_size=32),
 #                     steps_per_epoch=len(trainX) / 32, epochs=epochs)
 
@@ -107,24 +111,6 @@ H= model.fit_generator(trainGen.generator(),steps_per_epoch= trainGen.numImages/
 #model.save(config.MODEL_PATH,overwrite=True)
 
 
-
-
-
-
-#checkpoint = ModelCheckpoint(args["model"], monitor='val_acc', verbose=1, save_best_only=True,save_weights_only=True)
-
-# print("[INFO] training the network...")
-# print("trainX ",trainX.shape )
-# H = model.fit(trainX, trainY, validation_data=(testX, testY), batch_size=10,\
-#     epochs=10, verbose=1)
-
-# print("[INFO] evaluating network...")
-
-#model.save(args["model"])
-#predictions = model.predict(testX, batch_size=10)
-
-
-
 plt.style.use("ggplot")
 plt.figure()
 plt.plot(np.arange(0, 70), H.history["loss"], label="train_loss")
@@ -135,4 +121,4 @@ plt.title("Training Loss and Accuracy on CIFAr-10")
 plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
 plt.legend()
-plt.savefig(args["output"])
+plt.savefig("ShirtSleeves/output/")

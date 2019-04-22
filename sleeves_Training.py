@@ -53,7 +53,7 @@ train_hdf5 = "ShirtSleeves/hdf5data/train.hdf5"
 test_hdf5 = "ShirtSleeves/hdf5data/test.hdf5"
 
 
-sp = SimplePreprocessor(224,224)
+sp = SimplePreprocessor(64,64)
 iap = ImageToArrayProcessor()
 
 
@@ -82,11 +82,12 @@ valGen   = HDF5DataGenerator(test_hdf5,28,aug=aug,preprocessors=[sp,iap],classes
 
 #trainY = to_categorical(trainY)
 #testY = to_categorical(testY)
-
-
+import os
+fname=os.path.sep.join(["ShirtSleeves/model/","weight-{epoch:03d}-{val_loss:.4f}.hdf5"])
+callbacks=[ModelCheckpoint(fname,monitor="val_loss",mode="min",save_best_only=True)]
 opt = SGD(lr=0.01, momentum=0.9, nesterov=True)
 
-model = MiniVGGNet.build(width=224, height=224, depth=3, classes=4)
+model = MiniVGGNet.build(width=64, height=64, depth=3, classes=4)
 
 # model.fit_generator(datagen.flow(trainX, trainY, batch_size=32),
 #                     steps_per_epoch=len(trainX) / 32, epochs=epochs)
@@ -97,7 +98,7 @@ model.compile(loss="categorical_crossentropy", optimizer=opt,
 
 model.fit_generator(trainGen.generator(),steps_per_epoch= trainGen.numImages//28 ,
                     validation_data = valGen.generator(),validation_steps=valGen.numImages//28,
-                    verbose=1,epochs=10)
+                    verbose=1,epochs=10,callbacks=callbacks)
 
 #model.save(config.MODEL_PATH,overwrite=True)
 

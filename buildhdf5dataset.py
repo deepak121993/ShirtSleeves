@@ -34,7 +34,7 @@ datasets = [("train",trainPaths,trainLabels,train_hdf5),("test",testPaths,testLa
 
 for (dtype,paths,labels,outputPath) in datasets:
     print("[INFO] building {}..".format(outputPath))
-    writer = HDF5DatasetWriter((len(paths),224,224,3),outputPath)
+    writer = HDF5DatasetWriter((len(paths),64,64,3),outputPath)
 
     widget = ["building dataset",progressbar.Percentage()," ",progressbar.Bar()]
     pbar = progressbar.ProgressBar(maxval=len(paths),widgets=widget).start()
@@ -42,7 +42,7 @@ for (dtype,paths,labels,outputPath) in datasets:
     for (i,(path,label)) in enumerate(zip(paths,labels)):
         try:
             image = cv2.imread(path)
-            image = cv2.resize(image, (224,224), interpolation = cv2.INTER_AREA)
+            image = cv2.resize(image, (64,64), interpolation = cv2.INTER_AREA)
             #print("image shape ",image.shape)
             writer.add([image],[label])
             pbar.update(i)
